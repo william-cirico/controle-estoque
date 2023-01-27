@@ -1,16 +1,15 @@
-import React, { useState } from 'react';
 import {
-  MenuFoldOutlined,
-  MenuUnfoldOutlined,
-  UploadOutlined,
-  UserOutlined,
-  VideoCameraOutlined,
+    MenuFoldOutlined,
+    MenuUnfoldOutlined
 } from '@ant-design/icons';
-import { Layout, Menu, theme } from 'antd';
+import { LogoutOutlined, TagsOutlined } from '@ant-design/icons/lib/icons';
+import { FloatButton, Layout, Menu, theme } from 'antd';
+import React, { ReactNode, useState } from 'react';
+import styles from "./InternalLayout.module.css";
 
 const { Header, Sider, Content } = Layout;
 
-export function InternalLayout() {
+export function InternalLayout({ children }: { children: ReactNode }) {
   const [collapsed, setCollapsed] = useState(false);
   const {
     token: { colorBgContainer },
@@ -18,27 +17,21 @@ export function InternalLayout() {
 
   return (
     <Layout>
-      <Sider trigger={null} collapsible collapsed={collapsed}>
-        <div className="logo" />
+      <Sider className={styles.sider} trigger={null} collapsible collapsed={collapsed}>
         <Menu
           theme="dark"
           mode="inline"
-          defaultSelectedKeys={['1']}
+          defaultSelectedKeys={['/estoque']}
           items={[
             {
-              key: '1',
-              icon: <UserOutlined />,
-              label: 'nav 1',
+              key: '/estoque',
+              icon: <TagsOutlined />,
+              label: 'Estoque',
             },
             {
-              key: '2',
-              icon: <VideoCameraOutlined />,
-              label: 'nav 2',
-            },
-            {
-              key: '3',
-              icon: <UploadOutlined />,
-              label: 'nav 3',
+              key: '/logout',
+              icon: <LogoutOutlined />,
+              label: 'Logout',
             },
           ]}
         />
@@ -46,7 +39,7 @@ export function InternalLayout() {
       <Layout className="site-layout">
         <Header style={{ padding: 0, background: colorBgContainer }}>
           {React.createElement(collapsed ? MenuUnfoldOutlined : MenuFoldOutlined, {
-            className: 'trigger',
+            className: styles.trigger,
             onClick: () => setCollapsed(!collapsed),
           })}
         </Header>
@@ -58,28 +51,11 @@ export function InternalLayout() {
             background: colorBgContainer,
           }}
         >
-          Content
+            {children}
+            <FloatButton.BackTop style={{ right: 80 }} />
         </Content>
       </Layout>
     </Layout>
   );
 };
 
-export default App;
-#components-layout-demo-custom-trigger .trigger {
-  padding: 0 24px;
-  font-size: 18px;
-  line-height: 64px;
-  cursor: pointer;
-  transition: color 0.3s;
-}
-
-#components-layout-demo-custom-trigger .trigger:hover {
-  color: #1890ff;
-}
-
-#components-layout-demo-custom-trigger .logo {
-  height: 32px;
-  margin: 16px;
-  background: rgba(255, 255, 255, 0.3);
-}
