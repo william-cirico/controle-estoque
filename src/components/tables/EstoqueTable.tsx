@@ -1,19 +1,19 @@
 import { CloseOutlined, EditOutlined, MinusOutlined, PlusOutlined } from "@ant-design/icons";
 import { Button, Popconfirm, Space, Table } from "antd";
 import { ColumnsType } from "antd/es/table";
-
-export type Produto = {
-    id: number;
-    nome: string;
-    quantidade: number;
-    preco: number;
-}
+import { Produto } from "../../types/produto";
+import { useState } from "react";
+import { AddEditProdutoModal } from "../modals/AddEditProdutoModal";
+import { useEstoque } from "../../contexts/EstoqueContext";
+import { AddRemoveEstoqueProduto } from "../modals/AddRemoveEstoqueProduto";
 
 type Props = {
     produtos: Produto[];
 }
 
 export function EstoqueTable({ produtos }: Props) {
+    const { excluirProduto } = useEstoque();
+
     const colunas: ColumnsType<Produto> = [
         {
             key: "id",
@@ -45,16 +45,24 @@ export function EstoqueTable({ produtos }: Props) {
             key: "acoes",
             title: "Ações",
             width: 10,
-            render: () => <Space>
+            render: (_, produto) => <Space>
                 <Button type="primary" icon={<PlusOutlined />} shape="circle" style={{ backgroundColor: "#08BDBD" }} />
                 <Button type="primary" icon={<MinusOutlined />} shape="circle" style={{ backgroundColor: "#FE5F55" }} />
-                <Button type="primary" icon={<EditOutlined />} shape="circle" style={{ backgroundColor: "#F49F0A" }} />
-                <Popconfirm okText="Sim" cancelText="Não" placement="bottomLeft" title="Aviso!" description="Você tem certeza que deseja remover o produto?">
+                <Button onClick={() => setMostrarModalEditarProduto(produto)} type="primary" icon={<EditOutlined />} shape="circle" style={{ backgroundColor: "#F49F0A" }} />
+                <Popconfirm onConfirm={() => excluirProduto(produto.id)} okText="Sim" cancelText="Não" placement="bottomLeft" title="Aviso!" description="Você tem certeza que deseja remover o produto?">
                     <Button type="primary" icon={<CloseOutlined />} shape="circle" style={{ backgroundColor: "#050609" }} />
                 </Popconfirm>
             </Space>
         },
     ];
 
-    return <Table columns={colunas} rowKey="id" dataSource={produtos} />
+    const [mostrarModalEditarProduto, setMostrarModalEditarProduto] = useState<Produto | null>(null);
+
+    return (
+        <>
+            <AddRemoveEstoqueProduto mode="add" productId={1} />
+            { !!mostrarModalEditarProduto && <AddEditProdutoModal produto={mostrarModalEditarProduto} closeModal={() => setMostrarModalEditarProduto(null)} /> }
+            <Table columns={colunas} rowKey="id" dataSource={produtos} locale={{ emptyText: "nenhum produto cadastrado" }} />
+        </>
+    );
 }
