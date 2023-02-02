@@ -5,7 +5,7 @@ type Props = {
     productId: number;
 }
 
-export function AddRemoveEstoqueProduto({ mode, productId }: Props) {
+export function AddRemoveEstoqueProdutoModal({ mode, productId }: Props) {
     return <Modal
         open={true}
         title={mode === "add" ? "Adicionar itens ao produto" : "Remover itens do produto"}
@@ -19,7 +19,7 @@ export function AddRemoveEstoqueProduto({ mode, productId }: Props) {
                 <InputNumber style={{ width: "100%" }} />
             </Form.Item>
             <Form.Item>
-                <Button>{mode === "add" ? "Adicionar" : "Remover"}</Button>
+                <Button type="primary">{mode === "add" ? "Adicionar" : "Remover"}</Button>
             </Form.Item>
         </Form>
     </Modal>
