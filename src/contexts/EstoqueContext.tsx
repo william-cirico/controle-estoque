@@ -7,6 +7,7 @@ type EstoqueContextType = {
     cadastrarProduto: (produto: Produto) => void;
     editarProduto: (produto: Produto) => void;
     excluirProduto: (id: number) => void;
+    adicionarEstoqueProduto: (id: number, quantidade: number) => void;
 }
 
 // 2º Criar o contexto
@@ -45,8 +46,20 @@ export function EstoqueProvider({ children }: { children: ReactNode }) {
         setEstoque(estoqueAtualizado);
     }
 
+    function adicionarEstoqueProduto(id: number, quantidade: number) {
+        const estoqueAtualizado = estoque.map(produto => {
+            if (produto.id === id) {
+                produto.quantidade += quantidade;
+            }
+
+            return produto;
+        });
+
+        setEstoque(estoqueAtualizado);
+    }
+
     return (
-        <EstoqueContext.Provider value={{ estoque, cadastrarProduto, editarProduto, excluirProduto }}>
+        <EstoqueContext.Provider value={{ estoque, cadastrarProduto, editarProduto, excluirProduto, adicionarEstoqueProduto }}>
             {children}
         </EstoqueContext.Provider>
     );
